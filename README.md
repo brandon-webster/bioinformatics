@@ -1,3 +1,4 @@
 # bioinformatics
-Learning bioinformatics in Python
+Learning bioinformatics in Python; these three scripts illustrate the iterative improvement of a motif finding algorithm. The first iteration builds up a list of probable motifs based on a simple scoring system that tallies nucleotide mismatches at each position(GreedyMotifSearch). The second iteration introduces randomized motif building and accounts for Laplace's Principle by adding pseudocounting to the scoring system to improve the accuracy of predictions(RandomizedMotifSearch). The third and last iteration is a Gibb's Sampler that adds another layer of randomization and searches DNA strings at a more granular level by making less drastic changes at each step when compared to RandmoizedMotifSearch. Guided by the Bioinformatics Specialization on Coursera. 
 
+In the future I would like to add a GUI with the tkinter package and edit the code to be cleaner. 
