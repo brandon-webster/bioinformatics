@@ -12,10 +12,13 @@ optima to find the global optimum.
 
 def GibbsSampler(Dna, k, t, n):
     randommotifs = []
+    #Select a random set of motifs, one from each sequence, to populate a lsit of motifs
     for seq in Dna:
         r = random.randint(0, len(Dna[0])-k)
         randommotifs.append(seq[r:r+k])
     BestMotifs = randommotifs
+    #Remove one of the randomly generated motifs and select a weighted probable, motif 
+    #to replace it. Do this n times. 
     for j in range(n):
         r = random.randint(0, t-1)
         xrm = randommotifs.pop(r)
@@ -45,7 +48,10 @@ Output: One of the kmers, chosen at random with respect to probabilities. Genera
 a random decimal between 0 and 1. Since we know that all prbabilities add up to 1
 we just add each probability together until it exceeds one. Basically, the probabilities
 take up space on a number line between 0 and 1 so the more space it takes up, the
-more likely it is to push p over 1.
+more likely it is to push p over 1. This simulates rolling a weighted die to select kmers. This 
+is the subroutine that allows this Gibb's Sampler to escape local optima and(hopefully) find the 
+globa optima because likely kmers are ALWAYS selected. Instead, they are selcted a frequency of
+time equivalent to the profile generated probability.
 '''
 
 import random
