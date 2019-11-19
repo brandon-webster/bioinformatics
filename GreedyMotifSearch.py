@@ -1,4 +1,4 @@
-'''Week 3 develop a simple, greedy motif finding algorithm that uses frequency mapping
+''' Greedy motif finding algorithm uses frequency mapping
 to compute likely motifs from a set of up stream regions. While it is quicker than a
 a brute force approach, it suffers from accuracy issues because the frequency map
 can be set to 0 probability in some cases. It disregards Cromwell's Rule because
@@ -6,6 +6,43 @@ setting the probability to 0; while technically correct, based on the possibly s
 profile that was generated, oversimplifies the problem and does not truely reflect
 reality.  '''
 
+
+
+'''GreedyMotifSearch ties together all of the previouos functions. It can start at
+an arbitrary position and builds up possible motifs of a desired lengths. Then it
+compares the motif lists against each other based on a simple scoring system and
+keeps the best score. While this algo is fast compared to direct pattern matching,
+it does sacrafice accuracy because the way our current profile is set up now a
+single zero can set the probability of a kmer down to 0 if even a single position is off.
+Furthermore, because of the way profiles are built up one at a time it leads to many
+zeroes at during the first couple iterations, thus a result can be heavily skewed based
+on the starting Dna string.
+'''
+def GreedyMotifSearch(Dna, k, t):
+    #BestMotifs <- Append the first k-mer om eacj Dna string to initilize variable
+    BestMotifs = []
+    for i in range(t):r6u
+        BestMotifs.append(Dna[i][0:k])
+    n = len(Dna[0])
+    #OuterLoop <- In the first Dna string, range through each K-mer at a time to
+    #build possible motif lists
+    for i in range(n-k+1):
+        Motifs = []
+        Motifs.append(Dna[0][i:i+k])
+        '''Inner loop <- Runs t-1 times for every 1 iteration of outer loop
+        builds a profile matrix from all the Dna strings using the outerloop motif
+        as a starting point. Proceeds one string at a time to build up a profile
+        matrix by selecting the ProfileMostProbableKmer and adding that to the profile'''
+        for j in range(1, t):
+            P = Profile(Motifs[0:j])
+            Motifs.append(ProfileMostProbableKmer(Dna[j], k, P))
+        #at the end of innerloop compare score of built up motifs to current best
+        if Score(Motifs) < Score(BestMotifs):
+            BestMotifs = Motifs
+    return BestMotifs
+
+
+#SUBROUTINES
 
 '''
 Input: A list of sequences(strings)
@@ -130,35 +167,3 @@ def ProfileMostProbableKmer(text, k, profile):
             mostprob = motif
         return mostprob
 
-'''GreedyMotifSearch ties together all of the previouos functions. It can start at
-an arbitrary position and builds up possible motifs of a desired lengths. Then it
-compares the motif lists against each other based on a simple scoring system and
-keeps the best score. While this algo is fast compared to direct pattern matching,
-it does sacrafice accuracy because the way our current profile is set up now a
-single zero can set the probability of a kmer down to 0 if even a single position is off.
-Furthermore, because of the way profiles are built up one at a time it leads to many
-zeroes at during the first couple iterations, thus a result can be heavily skewed based
-on the starting Dna string.
-'''
-def GreedyMotifSearch(Dna, k, t):
-    #BestMotifs <- Append the first k-mer om eacj Dna string to initilize variable
-    BestMotifs = []
-    for i in range(t):r6u
-        BestMotifs.append(Dna[i][0:k])
-    n = len(Dna[0])
-    #OuterLoop <- In the first Dna string, range through each K-mer at a time to
-    #build possible motif lists
-    for i in range(n-k+1):
-        Motifs = []
-        Motifs.append(Dna[0][i:i+k])
-        '''Inner loop <- Runs t-1 times for every 1 iteration of outer loop
-        builds a profile matrix from all the Dna strings using the outerloop motif
-        as a starting point. Proceeds one string at a time to build up a profile
-        matrix by selecting the ProfileMostProbableKmer and adding that to the profile'''
-        for j in range(1, t):
-            P = Profile(Motifs[0:j])
-            Motifs.append(ProfileMostProbableKmer(Dna[j], k, P))
-        #at the end of innerloop compare score of built up motifs to current best
-        if Score(Motifs) < Score(BestMotifs):
-            BestMotifs = Motifs
-    return BestMotifs
